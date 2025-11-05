@@ -16,12 +16,15 @@ func TestIsLocalPath(t *testing.T) {
 	assert.True(t, IsLocalPath("myfile.txt"))
 	assert.True(t, IsLocalPath("./myfile.txt"))
 	assert.True(t, IsLocalPath("../myfile.txt"))
-	assert.True(t, IsLocalPath("file:///foo/bar/myfile.txt"))
 
 	// Absolute paths.
 	assert.False(t, IsLocalPath("/some/full/path"))
 	assert.False(t, IsLocalPath("/Workspace/path/to/package"))
 	assert.False(t, IsLocalPath("/Users/path/to/package"))
+
+	// Absolute paths with file:// scheme are runtime container paths (remote).
+	assert.False(t, IsLocalPath("file:///foo/bar/myfile.txt"))
+	assert.False(t, IsLocalPath("file:///opt/spark/jars/driver.jar"))
 
 	// Paths with schemes.
 	assert.False(t, IsLocalPath("dbfs://path/to/package"))
